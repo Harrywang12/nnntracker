@@ -173,6 +173,19 @@
     }
   }
 
+  // Check if error is JWT expiration and return user-friendly message
+  function getJWTErrorMessage(error) {
+    const msg = String(error?.message || error || '').toLowerCase();
+    const isJWTError = 
+      msg.includes('jwt') ||
+      msg.includes('expired') ||
+      msg.includes('token') && (msg.includes('invalid') || msg.includes('expired')) ||
+      msg.includes('unauthorized') ||
+      msg.includes('401') ||
+      msg === 'http 401';
+    return isJWTError ? 'Please login again' : error?.message || String(error || 'Unknown error');
+  }
+
   async function getState() {
     return new Promise((resolve) => {
       api.runtime.sendMessage({ type: 'getState' }, (resp) => resolve(resp));
@@ -325,7 +338,17 @@
         const uname = await sbGetUsername(appState.accessToken, appState.userId);
         usernameState.textContent = uname ? `Username: ${uname}` : 'No username set';
       } catch (e) {
-        usernameState.textContent = `Error fetching username: ${e.message}`;
+        const errorMsg = getJWTErrorMessage(e);
+        if (errorMsg === 'Please login again') {
+          // Clear auth state on JWT expiration
+          appState.accessToken = null;
+          appState.refreshToken = null;
+          appState.userId = null;
+          appState.userEmail = null;
+          await storageSet({ accessToken: null, refreshToken: null, userEmail: null, userId: null });
+          renderAccountState();
+        }
+        usernameState.textContent = `Error fetching username: ${errorMsg}`;
       }
     } else {
       usernameState.textContent = 'No username set';
@@ -362,7 +385,17 @@
       });
       els.leaderboardInfo.textContent = '';
     } catch (e) {
-      els.leaderboardInfo.textContent = `Error: ${e.message}`;
+      const errorMsg = getJWTErrorMessage(e);
+      if (errorMsg === 'Please login again') {
+        // Clear auth state on JWT expiration
+        appState.accessToken = null;
+        appState.refreshToken = null;
+        appState.userId = null;
+        appState.userEmail = null;
+        await storageSet({ accessToken: null, refreshToken: null, userEmail: null, userId: null });
+        renderAccountState();
+      }
+      els.leaderboardInfo.textContent = `Error: ${errorMsg}`;
     }
   }
 
@@ -493,7 +526,18 @@
         usernameInput.value = '';
         alert('Username saved.');
       } catch (err) {
-        alert(`Save failed: ${err.message}`);
+        const errorMsg = getJWTErrorMessage(err);
+        if (errorMsg === 'Please login again') {
+          // Clear auth state on JWT expiration
+          appState.accessToken = null;
+          appState.refreshToken = null;
+          appState.userId = null;
+          appState.userEmail = null;
+          await storageSet({ accessToken: null, refreshToken: null, userEmail: null, userId: null });
+          renderAccountState();
+          await refreshUsernameUI();
+        }
+        alert(`Save failed: ${errorMsg}`);
       }
     });
   }
