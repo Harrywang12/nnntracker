@@ -81,9 +81,11 @@
         <input id="usernameInput" type="text" placeholder="Choose a username" minlength="3" maxlength="32" required>
         <button type="submit" class="add-btn">Save username</button>
       </form>
-      <div class="muted" style="margin-top:8px">Configure API at popup/config.js</div>
+      <div class="muted" style="margin-top:8px">Using shared Supabase instance</div>
     </section>
   </div>
+  <!-- Load shared config first, then user's custom config if it exists -->
+  <script src="config.shared.js"></script>
   <script src="config.js"></script>
   <script src="popup.js"></script>
   </body>
