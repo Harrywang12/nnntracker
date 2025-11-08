@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adult Content Tracker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <nav class="top-nav">
+      <button class="tab-btn active" data-tab="streakTab">Streak</button>
+      <button class="tab-btn" data-tab="leaderboardTab">Leaderboard</button>
+      <button class="tab-btn" data-tab="accountTab">Account</button>
+    </nav>
+    <header class="header">
+      <h1 class="title">Streak</h1>
+      <div id="streakValue" class="streak-value">–</div>
+      <div id="lastVisit" class="last-visit">Last visit: –</div>
+    </header>
+
+    <section id="streakTab" class="tab-pane calendar-section">
+      <div class="calendar-header">
+        <button id="prevMonth" class="nav-btn" aria-label="Previous Month">‹</button>
+        <div id="monthLabel" class="month-label">Month Year</div>
+        <button id="nextMonth" class="nav-btn" aria-label="Next Month">›</button>
+      </div>
+      <table class="calendar" id="calendar">
+        <thead>
+          <tr>
+            <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+          </tr>
+        </thead>
+        <tbody id="calendarBody">
+        </tbody>
+      </table>
+      <div class="legend">
+        <span class="legend-box legend-clean"></span><span>Clean days</span>
+        <span class="legend-box legend-broken"></span><span>Last visit</span>
+      </div>
+    </section>
+
+    <section class="custom-sites-section">
+      <h2 class="section-title">Flagged websites</h2>
+      <form id="addSiteForm" class="add-site-form">
+        <input id="siteInput" type="text" placeholder="example.com" aria-label="Add website to flag">
+        <button type="submit" class="add-btn">Add</button>
+      </form>
+      <ul id="sitesList" class="sites-list"></ul>
+    </section>
+
+    <section class="actions-section">
+      <button id="resetBtn" class="reset-btn" title="Sets last visit to today">Reset streak</button>
+    </section>
+
+    <section id="leaderboardTab" class="tab-pane panel hidden">
+      <h2 class="section-title">Leaderboard (most detections)</h2>
+      <div id="leaderboardInfo" class="muted">Log in to see the leaderboard.</div>
+      <ul id="leaderboardList" class="leaderboard-list"></ul>
+      <button id="refreshLeaderboardBtn" class="reset-btn" style="margin-top:8px">Refresh</button>
+    </section>
+
+    <section id="accountTab" class="tab-pane panel hidden">
+      <h2 class="section-title">Account</h2>
+      <div id="accountState" class="muted">Not logged in</div>
+      <form id="loginForm" class="auth-form">
+        <input id="emailInput" type="email" placeholder="Email" autocomplete="email" required>
+        <input id="passwordInput" type="password" placeholder="Password" autocomplete="current-password" required>
+        <button type="submit" class="add-btn">Log in</button>
+      </form>
+      <form id="signupForm" class="auth-form">
+        <input id="suEmailInput" type="email" placeholder="Email" autocomplete="email" required>
+        <input id="suPasswordInput" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password" required>
+        <button type="submit" class="add-btn">Sign up</button>
+      </form>
+      <button id="logoutBtn" class="reset-btn">Log out</button>
+      <hr style="border: none; border-top: 1px solid #1f2937; margin: 10px 0;">
+      <div class="section-title">Username</div>
+      <div id="usernameState" class="muted">No username set</div>
+      <form id="usernameForm" class="auth-form">
+        <input id="usernameInput" type="text" placeholder="Choose a username" minlength="3" maxlength="32" required>
+        <button type="submit" class="add-btn">Save username</button>
+      </form>
+      <div class="muted" style="margin-top:8px">Configure API at popup/config.js</div>
+    </section>
+  </div>
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+  </body>
+</html>
+
+
